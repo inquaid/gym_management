@@ -17,60 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username) || empty($password)) {
         $error = 'Please enter both username and password';
     } else {
-        try {
-            // First, check if admin table exists and has any records
-            $check_table = $conn->query("SHOW TABLES LIKE 'admin'");
-            if ($check_table->num_rows === 0) {
-                // Create admin table if it doesn't exist
-                $conn->query("CREATE TABLE IF NOT EXISTS admin (
-                    user_id INT(11) NOT NULL AUTO_INCREMENT,
-                    username VARCHAR(50) NOT NULL,
-                    password VARCHAR(50) NOT NULL,
-                    name VARCHAR(50) NOT NULL,
-                    PRIMARY KEY (user_id)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
-            }
+        // Check admin login with hardcoded credentials
+        if ($username === 'admin' && $password === 'admin123') {
+            // Set session variables
+            $_SESSION['user_id'] = 1;
+            $_SESSION['username'] = 'admin';
+            $_SESSION['role'] = 'admin';
 
-            // Check if there are any admin accounts
-            $check_admin = $conn->query("SELECT COUNT(*) as count FROM admin");
-            $admin_count = $check_admin->fetch_assoc()['count'];
-
-            if ($admin_count === 0) {
-                // Create default admin account if none exists
-                $default_username = 'admin';
-                $default_password = 'admin123';
-                $default_name = 'System Administrator';
-                
-                $stmt = $conn->prepare("INSERT INTO admin (username, password, name) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $default_username, $default_password, $default_name);
-                $stmt->execute();
-            }
-
-            // Now proceed with login
-            $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ?");
-            $stmt->bind_param("s", $username);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            if ($result->num_rows === 1) {
-                $user = $result->fetch_assoc();
-                if ($password === $user['password']) {
-                    // Set session variables
-                    $_SESSION['user_id'] = $user['user_id'];
-                    $_SESSION['username'] = $user['username'];
-                    $_SESSION['role'] = 'admin';
-
-                    // Redirect to admin dashboard
-                    header("Location: pages/dashboard.php");
-                    exit;
-                } else {
-                    $error = 'Invalid username or password';
-                }
-            } else {
-                $error = 'Invalid username or password';
-            }
-        } catch (Exception $e) {
-            $error = 'Login failed: ' . $e->getMessage();
+            // Redirect to admin dashboard
+            header("Location: pages/dashboard.php");
+            exit;
+        } else {
+            $error = 'Invalid username or password';
         }
     }
 }
@@ -193,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h2 class="text-center mb-4">Admin Login</h2>
                     
                     <?php if ($error): ?>
-                        <div class="alert alert-danger"><?php echo $error; ?></div>
+                        <div class="alert"><?php echo $error; ?></div>
                     <?php endif; ?>
 
                     <form method="POST" action="">

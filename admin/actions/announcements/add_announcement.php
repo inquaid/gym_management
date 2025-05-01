@@ -4,8 +4,8 @@ require_once '../../../dbcon.php';
 
 // Check if user is logged in and is admin
 if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
-    header('HTTP/1.1 403 Forbidden');
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
+    $_SESSION['error_message'] = 'Unauthorized access';
+    header("Location: ../../pages/announcements.php");
     exit;
 }
 
@@ -24,7 +24,7 @@ if (empty($_POST['message'])) {
 }
 
 // Get form data
-$message = $_POST['message'];
+$message = trim($_POST['message']);
 $date = date('Y-m-d'); // Current date
 
 // Insert announcement into database

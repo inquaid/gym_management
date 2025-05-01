@@ -127,7 +127,9 @@ unset($_SESSION['error_message']);
                             <label for="message" class="form-label required-field">Announcement Message</label>
                             <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Announcement</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Add Announcement
+                        </button>
                     </form>
                 </div>
 

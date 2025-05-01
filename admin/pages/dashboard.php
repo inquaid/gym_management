@@ -266,7 +266,7 @@ $recent_announcements = $conn->query($recent_announcements_query);
                             </a>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-3">
-                            <a href="add_announcement.php" class="btn btn-info btn-lg w-100">
+                            <a href="announcements.php" class="btn btn-info btn-lg w-100">
                                 <i class="fas fa-bullhorn me-2"></i>Add Announcement
                             </a>
                         </div>

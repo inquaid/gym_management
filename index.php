@@ -29,13 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = sanitize($_POST['username']);
     $password = $_POST['password'];
     
-    // Check admin login
-    $admin_query = "SELECT * FROM admin WHERE username = '$username' AND password = '$password'";
-    $admin_result = $conn->query($admin_query);
-    
-    if ($admin_result->num_rows > 0) {
-        $admin = $admin_result->fetch_assoc();
-        setUserSession($admin['user_id'], 'admin', $admin['username']);
+    // Check admin login with hardcoded credentials
+    if ($username === 'admin' && $password === 'admin123') {
+        setUserSession(1, 'admin', 'admin');
         if (!headers_sent()) {
             header("Location: admin/pages/dashboard.php");
         } else {

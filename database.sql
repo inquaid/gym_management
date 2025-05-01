@@ -7,7 +7,7 @@ CREATE TABLE membership_plan (
   price INT(11) NOT NULL,  -- Monthly fee (in Taka)
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*
 -- Admin Table
 CREATE TABLE admin (
   user_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -16,7 +16,7 @@ CREATE TABLE admin (
   name VARCHAR(50) NOT NULL,
   PRIMARY KEY (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+*/
 -- Members Table (Updated with Due Amount)
 CREATE TABLE members (
   user_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -50,19 +50,6 @@ CREATE TABLE attendance (
   FOREIGN KEY (user_id) REFERENCES members(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Payments Table (Supports Partial Payments)
-CREATE TABLE payments (
-  payment_id INT(11) NOT NULL AUTO_INCREMENT,
-  user_id INT(11) NOT NULL,  -- References members table
-  order_id INT(11) NULL,  -- Can be NULL for membership payments
-  payment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  amount DECIMAL(10,2) NOT NULL,  -- Allows partial payments
-  payment_method VARCHAR(20) NOT NULL DEFAULT 'Cash',
-  status ENUM('Success', 'Failed', 'Pending') NOT NULL DEFAULT 'Pending',
-  PRIMARY KEY (payment_id),
-  FOREIGN KEY (user_id) REFERENCES members(user_id) ON DELETE CASCADE,
-  FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ========== EQUIPMENT & STAFF ==========
 
@@ -159,4 +146,19 @@ CREATE TABLE order_items (
   PRIMARY KEY (item_id),
   FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- Payments Table (Supports Partial Payments)
+CREATE TABLE payments (
+  payment_id INT(11) NOT NULL AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,  -- References members table
+  order_id INT(11) NULL,  -- Can be NULL for membership payments
+  payment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  amount DECIMAL(10,2) NOT NULL,  -- Allows partial payments
+  payment_method VARCHAR(20) NOT NULL DEFAULT 'Cash',
+  status ENUM('Success', 'Failed', 'Pending') NOT NULL DEFAULT 'Pending',
+  PRIMARY KEY (payment_id),
+  FOREIGN KEY (user_id) REFERENCES members(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
